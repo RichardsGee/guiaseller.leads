@@ -6,6 +6,22 @@
   "type": "module",
   "scripts": {
     "dev": "node src/index.js",
+    "dev:api": "cd backend && npm run dev",
+    "dev:web": "cd frontend && npm run dev",
+    "dev:all": "npm run dev:api & npm run dev:web",
+    "build:api": "cd backend && npm run build",
+    "build:web": "cd frontend && npm run build",
+    "build": "npm run build:api && npm run build:web",
+    "lint:api": "cd backend && npm run lint",
+    "lint:web": "cd frontend && npm run lint",
+    "typecheck:api": "cd backend && npx tsc --noEmit",
+    "typecheck:web": "cd frontend && npx tsc --noEmit",
+    "typecheck": "npm run typecheck:api && npm run typecheck:web",
+    "db:generate": "cd backend && npx prisma generate",
+    "db:migrate": "cd backend && npx prisma migrate dev",
+    "db:push": "cd backend && npx prisma db push",
+    "db:studio": "cd backend && npx prisma studio",
+    "db:seed": "cd backend && npx tsx prisma/seed.ts",
     "start": "node src/index.js",
     "server": "node src/server.js",
     "bots:start": "node src/bots/index.js",
@@ -13,9 +29,7 @@
     "bot:test": "node scripts/test-discord-bot.js",
     "webhook:test": "node scripts/test-webhook.js",
     "test": "jest",
-    "lint": "eslint src/",
-    "typecheck": "tsc --noEmit",
-    "build": "tsc"
+    "lint": "eslint src/"
   },
   "keywords": [
     "guiaseller",

@@ -1,7 +1,30 @@
 # Server Status Report ⚡
 
 **Data:** 2026-02-26
-**Status:** ✅ Servidor iniciando (erros de tokens, não de código)
+**Status:** ✅ Leads API operacional | ⚠️ Discord bots com tokens inválidos
+
+---
+
+## 🚀 Leads API (porta 3001)
+
+✅ **Backend Express/Prisma** — `cd backend && npx tsx src/index.ts`
+✅ **Firebase Auth** — email/password + Google popup funcionando
+✅ **JWT** — geração e validação OK
+✅ **RBAC** — admin/manager/viewer enforced
+✅ **Dual DB** — guiaseller DB (read-only) + leads DB (CRUD)
+✅ **Sync pipeline** — `POST /api/v1/admin/sync` → importa 3.218 leads reais
+✅ **Scoring service** — 0-100 baseado em pedidos reais, listings, integrações
+✅ **Segmentation service** — founder/premium/pro/paying/churned/free-active/free-inactive
+
+**Usuário admin:** `richardsgee69@gmail.com` — role: admin, todas as permissions
+
+---
+
+## 🌐 Frontend (porta 5173)
+
+⚠️ **Em desenvolvimento** — skeleton criado, Epic 1.4 pendente
+
+---
 
 ---
 

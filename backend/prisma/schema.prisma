@@ -1,0 +1,270 @@
+// GuiaSeller Leads — Prisma Schema
+// Dual database: guiaseller (READ-ONLY) + leads (FULL CRUD)
+// This schema targets the LEADS database only.
+// The guiaseller database is accessed via a separate Prisma client with SELECT-only permissions.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("LEADS_DB_URL")
+}
+
+// ============================================
+// Core Lead Entity
+// ============================================
+model Lead {
+  id                 String    @id @default(cuid())
+  email              String    @unique
+  phone              String?
+  firstName          String
+  lastName           String
+  avatarUrl          String?
+
+  // guiaseller reference
+  guiasellerUserId   String?   @unique  // Firebase UID from guiaseller "User" table
+  userLevel          String?   // basic, PRO, PREMIUM, VITALICIO, FREE
+  subscriptionPlan   String?   // Pro, Premium, Vitalicio, etc.
+  subscriptionStatus String?   // ACTIVE, CANCELLED, etc.
+  cnpjCpf            String?   // Tax ID from guiaseller
+
+  // Computed metrics (from sync)
+  purchaseCount      Int       @default(0)
+  totalRevenue       Decimal   @default(0)
+  listingCount       Int       @default(0)
+
+  // Scoring
+  leadScore          Int       @default(0)
+  conversionProb     Float     @default(0)
+  scoreCalculatedAt  DateTime?
+  scoreReason        String?
+
+  // Segmentation
+  segment            String?   // founder, paying, churned, free-active, free-inactive
+  primaryMarketplace String?
+  marketplaces       String[]
+
+  // Status & Lifecycle
+  status             String    @default("active")
+  lastTouchedAt      DateTime  @updatedAt
+  convertedAt        DateTime?
+  conversionValue    Decimal?
+
+  // Sync tracking
+  lastSyncedAt       DateTime?
+  syncSource         String?   // 'guiaseller-db' | 'manual'
+
+  // Timestamps
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  // Relations
+  history            LeadHistory[]
+  enrichment         LeadEnrichment?
+  events             LeadEvent[]
+  scores             LeadScore[]
+
+  @@index([email])
+  @@index([guiasellerUserId])
+  @@index([leadScore])
+  @@index([segment])
+  @@index([primaryMarketplace])
+  @@index([status])
+  @@index([userLevel])
+  @@index([createdAt])
+  @@map("leads")
+}
+
+// ============================================
+// Lead Enrichment (denormalized guiaseller data)
+// ============================================
+model LeadEnrichment {
+  id                String    @id @default(cuid())
+  lead              Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId            String    @unique
+
+  // From guiaseller Company table
+  companyName       String?
+  fantasyName       String?
+  cnpj              String?
+  businessType      String?   // individual, business, enterprise
+
+  // From guiaseller orders (ML + Shopee + Magalu + Shein)
+  mlOrderCount      Int       @default(0)
+  mlRevenue         Decimal   @default(0)
+  shopeeOrderCount  Int       @default(0)
+  shopeeRevenue     Decimal   @default(0)
+  magaluOrderCount  Int       @default(0)
+  magaluRevenue     Decimal   @default(0)
+  sheinOrderCount   Int       @default(0)
+  sheinRevenue      Decimal   @default(0)
+  totalOrderCount   Int       @default(0)
+  totalOrderValue   Decimal   @default(0)
+  avgOrderValue     Decimal   @default(0)
+  lastOrderAt       DateTime?
+
+  // From guiaseller products/listings
+  mlListingCount    Int       @default(0)
+  shopeeListingCount Int      @default(0)
+  totalProductCount Int       @default(0)
+
+  // Integrations connected
+  mlIntegrations    Int       @default(0)
+  shopeeIntegrations Int      @default(0)
+  magaluIntegrations Int      @default(0)
+
+  // Subscription value
+  subscriptionValue Decimal   @default(0)
+  subscriptionCycle String?   // MONTHLY, YEARLY
+
+  // Activity metrics
+  lastActiveAt      DateTime?
+
+  updatedAt         DateTime  @updatedAt
+
+  @@index([leadId])
+  @@map("lead_enrichments")
+}
+
+// ============================================
+// Lead History (audit trail)
+// ============================================
+model LeadHistory {
+  id            String     @id @default(cuid())
+  lead          Lead       @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId        String
+
+  eventType     String
+  fieldChanged  String?
+  oldValue      Json?
+  newValue      Json?
+
+  adminUser     AdminUser? @relation(fields: [adminUserId], references: [id], onDelete: SetNull)
+  adminUserId   String?
+
+  metadata      Json?
+
+  createdAt     DateTime   @default(now())
+
+  @@index([leadId])
+  @@index([eventType])
+  @@index([createdAt])
+  @@map("lead_history")
+}
+
+// ============================================
+// Lead Events (user interactions)
+// ============================================
+model LeadEvent {
+  id          String   @id @default(cuid())
+  lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId      String
+
+  eventType   String
+  marketplace String?
+  metadata    Json?
+
+  createdAt   DateTime @default(now())
+
+  @@index([leadId])
+  @@index([eventType])
+  @@index([marketplace])
+  @@index([createdAt])
+  @@map("lead_events")
+}
+
+// ============================================
+// Lead Scores (score history for analytics)
+// ============================================
+model LeadScore {
+  id         String   @id @default(cuid())
+  lead       Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId     String
+
+  score      Int
+  reason     String?
+  components Json?
+
+  createdAt  DateTime @default(now())
+
+  @@index([leadId])
+  @@index([score])
+  @@index([createdAt])
+  @@map("lead_scores")
+}
+
+// ============================================
+// Admin Users (platform users)
+// ============================================
+model AdminUser {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  firebaseUid String   @unique
+
+  firstName   String
+  lastName    String
+  avatar      String?
+
+  role        String   @default("viewer")
+  permissions String[] @default([])
+
+  isActive    Boolean  @default(true)
+  lastLoginAt DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  history     LeadHistory[]
+
+  @@index([email])
+  @@index([firebaseUid])
+  @@map("admin_users")
+}
+
+// ============================================
+// Integration Events (marketplace sync logs)
+// ============================================
+model IntegrationEvent {
+  id           String   @id @default(cuid())
+  marketplace  String
+  eventType    String
+  status       String
+  leadCount    Int?
+
+  errorMessage String?
+  metadata     Json?
+
+  createdAt    DateTime @default(now())
+
+  @@index([marketplace])
+  @@index([eventType])
+  @@index([createdAt])
+  @@map("integration_events")
+}
+
+// ============================================
+// Sync Logs (data sync tracking)
+// ============================================
+model SyncLog {
+  id             String    @id @default(cuid())
+  marketplace    String
+  syncType       String
+  status         String
+
+  leadsProcessed Int       @default(0)
+  leadsCreated   Int       @default(0)
+  leadsUpdated   Int       @default(0)
+
+  startedAt      DateTime
+  completedAt    DateTime?
+  errorMessage   String?
+
+  @@index([marketplace])
+  @@index([syncType])
+  @@index([status])
+  @@index([startedAt])
+  @@map("sync_logs")
+}

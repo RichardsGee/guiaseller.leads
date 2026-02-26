@@ -43,10 +43,10 @@ timeline: 8 weeks (MVP) + 6 weeks (Phase 2) + ongoing (Phase 3)
   - Migrations ready to run
 
 **Success Criteria:**
-  - [ ] Both databases accessible via Prisma
-  - [ ] Schema validates with no errors
-  - [ ] Firebase Realtime DB operational
-  - [ ] SELECT-only constraint enforced on guiaseller DB
+  - [x] Both databases accessible via Prisma
+  - [x] Schema validates with no errors
+  - [x] Firebase Realtime DB operational
+  - [x] SELECT-only constraint enforced on guiaseller DB
 
 ---
 
@@ -65,10 +65,10 @@ timeline: 8 weeks (MVP) + 6 weeks (Phase 2) + ongoing (Phase 3)
   - RBAC middleware for routes
 
 **Success Criteria:**
-  - [ ] Login flows tested end-to-end
-  - [ ] JWT tokens valid and refreshable
-  - [ ] Role checks enforced on protected routes
-  - [ ] No hardcoded credentials
+  - [x] Login flows tested end-to-end
+  - [x] JWT tokens valid and refreshable
+  - [x] Role checks enforced on protected routes
+  - [x] No hardcoded credentials
 
 ---
 
@@ -129,10 +129,10 @@ timeline: 8 weeks (MVP) + 6 weeks (Phase 2) + ongoing (Phase 3)
   - Background job queue (Bull) for recalc
 
 **Success Criteria:**
-  - [ ] All CRUD operations tested
-  - [ ] Scoring accuracy validated
-  - [ ] All 6 marketplaces routed correctly
-  - [ ] Background jobs queue working
+  - [x] All CRUD operations tested
+  - [x] Scoring accuracy validated (rewritten for real guiaseller data)
+  - [x] All 6 marketplaces routed correctly
+  - [ ] Background jobs queue working (cron auto-sync pendente)
 
 ---
 

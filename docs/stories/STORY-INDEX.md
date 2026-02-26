@@ -12,9 +12,9 @@
 
 | Story | Title | Points | Status | Owner |
 |-------|-------|--------|--------|-------|
-| [1.1.1](./1.1.1.story.md) | Setup dual PostgreSQL databases (guiaseller + leads) | 8 | 📋 Ready | @dev + @data-engineer |
-| [1.1.2](./1.1.2.story.md) | Implement Prisma ORM with dual DB routing | 13 | 📋 Ready | @dev + @data-engineer |
-| [1.1.3](./1.1.3.story.md) | Configure Firebase Realtime DB & authentication | 5 | 📋 Ready | @dev |
+| [1.1.1](./1.1.1.story.md) | Setup dual PostgreSQL databases (guiaseller + leads) | 8 | ✅ Done | @dev + @data-engineer |
+| [1.1.2](./1.1.2.story.md) | Implement Prisma ORM with dual DB routing | 13 | ✅ Done | @dev + @data-engineer |
+| [1.1.3](./1.1.3.story.md) | Configure Firebase Realtime DB & authentication | 5 | ✅ Done | @dev |
 
 **Epic Total:** 26 points | **Timeline:** Week 1-2
 
@@ -24,9 +24,9 @@
 
 | Story | Title | Points | Status | Owner |
 |-------|-------|--------|--------|-------|
-| [1.2.1](./1.2.1.story.md) | Integrate Firebase Auth (signin, signup, refresh) | 8 | 📋 Ready | @dev |
-| [1.2.2](./1.2.2.story.md) | Implement JWT middleware + token validation | 5 | 📋 Ready | @dev |
-| [1.2.3](./1.2.3.story.md) | Setup role-based access control (RBAC) | 8 | 📋 Ready | @dev |
+| [1.2.1](./1.2.1.story.md) | Integrate Firebase Auth (signin, signup, refresh) | 8 | ✅ Done | @dev |
+| [1.2.2](./1.2.2.story.md) | Implement JWT middleware + token validation | 5 | ✅ Done | @dev |
+| [1.2.3](./1.2.3.story.md) | Setup role-based access control (RBAC) | 8 | ✅ Done | @dev |
 
 **Epic Total:** 21 points | **Timeline:** Week 1-2
 
@@ -36,10 +36,11 @@
 
 | Story | Title | Points | Status | Owner |
 |-------|-------|--------|--------|-------|
-| [1.3.1](./1.3.1.story.md) | Implement Lead CRUD API endpoints | 13 | 📋 Ready | @dev |
-| [1.3.2](./1.3.2.story.md) | Build rule-based lead scoring service | 13 | 📋 Ready | @dev |
-| [1.3.3](./1.3.3.story.md) | Implement lead segmentation logic | 8 | 📋 Ready | @dev |
-| [1.3.4](./1.3.4.story.md) | Setup marketplace routing & identification | 5 | 📋 Ready | @dev |
+| [1.3.1](./1.3.1.story.md) | Implement Lead CRUD API endpoints | 13 | ✅ Done | @dev |
+| [1.3.2](./1.3.2.story.md) | Build rule-based lead scoring service | 13 | ✅ Done | @dev |
+| [1.3.3](./1.3.3.story.md) | Implement lead segmentation logic | 8 | ✅ Done | @dev |
+| [1.3.4](./1.3.4.story.md) | Setup marketplace routing & identification | 5 | ✅ Done | @dev |
+| — | **[EXTRA]** Sync service: guiaseller DB → leads DB (real data pipeline) | 13 | ✅ Done | @dev |
 
 **Epic Total:** 39 points | **Timeline:** Week 3-4
 
@@ -49,9 +50,9 @@
 
 | Story | Title | Points | Status | Owner |
 |-------|-------|--------|--------|-------|
-| [1.4.1](./1.4.1.story.md) | Create React dashboard layout (AppLayout, Sidebar) | 8 | 📋 Ready | @dev |
-| [1.4.2](./1.4.2.story.md) | Build leads table with filtering & sorting | 13 | 📋 Ready | @dev |
-| [1.4.3](./1.4.3.story.md) | Implement lead detail view + actions | 8 | 📋 Ready | @dev |
+| [1.4.1](./1.4.1.story.md) | Create React dashboard layout (AppLayout, Sidebar) | 8 | � Next | @dev |
+| [1.4.2](./1.4.2.story.md) | Build leads table with filtering & sorting | 13 | 🔄 Next | @dev |
+| [1.4.3](./1.4.3.story.md) | Implement lead detail view + actions | 8 | 🔄 Next | @dev |
 | [1.4.4](./1.4.4.story.md) | Setup Firebase real-time sync (frontend listener) | 8 | 📋 Ready | @dev |
 
 **Epic Total:** 37 points | **Timeline:** Week 3-5
@@ -180,7 +181,7 @@ Use this index to:
 
 ---
 
-**Status:** ✅ Ready for Sprint Planning
+**Status:** 🔄 Em Execução — Wave 1 completa, Wave 2 em andamento
 **Last Updated:** 26/02/2026
-**Next:** Sprint kickoff meeting with team
+**Next:** Frontend (Epic 1.4) + Cron auto-sync + TS fix final
 

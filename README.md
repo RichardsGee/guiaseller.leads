@@ -1439,22 +1439,22 @@ guiaseller.leads/
 ## 15. Roadmap de Implementação
 
 ### Fase 0 — Infraestrutura (Semana 1)
-- [ ] Criar repositório `guiaseller.leads`
-- [ ] Setup PostgreSQL dedicado (`guiaseller_leads`)
-- [ ] Criar schema Prisma inicial (Lead + LeadEvent + LeadProfile básico)
+- [x] Criar repositório `guiaseller.leads`
+- [x] Setup PostgreSQL dedicado (`guiaseller_leads`) — via EasyPanel
+- [x] Criar schema Prisma inicial (Lead + LeadEnrichment + LeadHistory + LeadScore + SyncLog)
 - [ ] Configurar Redis + BullMQ
-- [ ] Autenticação com Firebase Admin SDK (reuso do existente)
+- [x] Autenticação com Firebase Admin SDK (email/password + Google popup)
 - [ ] Docker Compose local com PostgreSQL + Redis
 - [ ] Configurar OpenAI SDK (chave de API + wrapper client)
 
 ### Fase 1 — MVP Interno (Semanas 2–4)
 
 **Backend:**
-- [ ] `BackSyncService` — sincroniza usuários do guiaseller.back via `GET /admin/users`
-- [ ] `LeadStatusService` — transições de status baseadas em `user_level` + `subscriptionStatus`
-- [ ] `LeadScoreService` — calcula `leadScore` e `conversionScore` com dados internos
+- [x] `syncService.ts` — sincroniza 3.218 usuários diretamente do guiaseller DB (ML, Shopee, Magalu, Shein, assinaturas, anuncios)
+- [x] `LeadStatusService` — status e segmento derivados no sync (`founder/premium/pro/paying/churned/free-active/free-inactive`)
+- [x] `scoringService.ts` — scoring 0-100 baseado em dados reais (pedidos, listings, integrações, assinatura, marketplace spread)
 - [ ] Webhook do Asaas para capturar `PAYMENT_RECEIVED` e `SUBSCRIPTION_CANCELLED`
-- [ ] Cron de sincronização a cada 5 minutos
+- [ ] Cron de sincronização a cada 6h (pendente — `node-cron` em `index.ts`)
 
 **Frontend (básico):**
 - [ ] Lista de leads com filtros (status, score, userLevel)
@@ -1548,4 +1548,4 @@ guiaseller.leads/
 
 ---
 
-> **Próximos passos:** Com este documento aprovado, o time inicia a Fase 0 criando o repositório `guiaseller.leads`, configurando a infraestrutura dedicada, fazendo o primeiro `BackSyncService` funcionar para popular os leads iniciais a partir dos usuários já existentes no `guiaseller.back`, e configurando o OpenAI SDK para os primeiros testes de geração de conteúdo.
+> **Status atual (26/02/2026):** Fase 0 e Fase 1 backend estão concluídas. O sync service importa 3.218 leads reais do guiaseller DB com enriquecimento completo (marketplaces, pedidos, assinaturas, scores). **Próximos passos:** (1) Cron auto-sync a cada 6h em `index.ts`, (2) Frontend — lista de leads com filtros + perfil detalhado (Epic 1.4), (3) Webhook do Asaas para eventos de pagamento em tempo real.

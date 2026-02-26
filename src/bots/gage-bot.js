@@ -9,7 +9,7 @@
 import { Client, GatewayIntentBits, EmbedBuilder } from 'discord.js';
 import logger from '../utils/logger.js';
 
-export class GageBot {
+class GageBot {
   constructor() {
     this.client = new Client({
       intents: [

@@ -27,3 +27,13 @@ Thumbs.db
 .aios-core/local/
 .claude/settings.local.json
 .aios/install-log.txt
+
+# Frontend build
+frontend/dist/
+frontend/.vite/
+
+# Backend build
+backend/dist/
+
+# Prisma
+backend/prisma/migrations/00_init/
